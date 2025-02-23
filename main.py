@@ -26,10 +26,15 @@ COGS = [
 @bot.event
 async def on_ready():
     print(f"Logged in as {bot.user}")
+    await load_cogs()
 
-# load all cogs
-for cog in COGS:
-    bot.load_extension(cog)
+async def load_cogs():
+    for cog in COGS:
+        try:
+            await bot.load_extension(cog)
+            print(f"Loaded {cog}")
+        except Exception as e:
+            print(f"Failed to load {cog}: {e}")
 
 # run the bot
 bot.run(DISCORD_TOKEN)

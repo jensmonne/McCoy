@@ -9,5 +9,5 @@ class Events(commands.Cog):
     async def on_ready(self):
         print(f'We have logged in as {self.bot.user}')
 
-def setup(bot):
-    bot.add_cog(Events(bot))
+async def setup(bot):
+    await bot.add_cog(Events(bot))

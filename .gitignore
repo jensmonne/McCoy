@@ -1,2 +1,9 @@
 # Ignore the .env file
 .env
+
+# Ignore the pychace files
+__pycache__
+
+# Ignore the .json files
+*.json
+xp_data.json
