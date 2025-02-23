@@ -1,5 +1,2 @@
 # Ignore the .env file
 .env
-
-# Ignore the pycache folders
-__pycache__
