@@ -6,4 +6,4 @@ __pycache__
 
 # Ignore the .json files
 *.json
-*.MP3
+*.mp3

@@ -1,6 +1,7 @@
 import discord
 import random
 import json
+import time
 from discord.ext import commands
 from config import required_level_xp, is_admin_or_owner, LEVEL_UP_EMOJIS, LEVEL_SHOW_EMOJIS
 
@@ -9,6 +10,7 @@ class Leveling(commands.Cog):
         self.bot = bot
         self.xp_data = self.load_xp()
         self.config = self.load_config()
+        self.last_message_time = {}
 
     ### --- JSON DATA HANDELING --- ###
 
@@ -49,6 +51,16 @@ class Leveling(commands.Cog):
         user_id = str(message.author.id)
         guild_id = str(message.guild.id)
 
+        # Check if the message is sent within 10 seconds of the last message
+        current_time = time.time()
+        if user_id in self.last_message_time:
+            last_time = self.last_message_time[user_id]
+            if current_time - last_time < 10:
+                return 
+
+        # Update the last message time
+        self.last_message_time[user_id] = current_time
+
         # Ensure guild data exists
         if guild_id not in self.xp_data:
             self.xp_data[guild_id] = {}
@@ -69,15 +81,19 @@ class Leveling(commands.Cog):
         random_emoji = random.choice(LEVEL_UP_EMOJIS)
 
         if self.xp_data[guild_id][user_id]["xp"] >= xp_needed:
+            old_level = self.xp_data[guild_id][user_id]["level"]
+
             self.xp_data[guild_id][user_id]["level"] += 1
             self.xp_data[guild_id][user_id]["xp"] = 0
 
-            # Get the custom level-up channel
-            channel_id = self.config.get(guild_id, {}).get("levelup_channel")
-            if channel_id:
-                levelup_channel = self.bot.get_channel(int(channel_id))
-            else:
-                levelup_channel = message.channel # Default to the current channel
+            # If the level is different from the previous one, send a level-up message
+            if self.xp_data[guild_id][user_id]["level"] > old_level:
+                # Get the custom level-up channel
+                channel_id = self.config.get(guild_id, {}).get("levelup_channel")
+                if channel_id:
+                    levelup_channel = self.bot.get_channel(int(channel_id))
+                else:
+                    levelup_channel = message.channel # Default to the current channel
 
             # Send level-up message
             await levelup_channel.send(f"{random_emoji} Congratulations {message.author.mention}, you have leveled up to level {self.xp_data[guild_id][user_id]['level']}!")

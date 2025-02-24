@@ -16,7 +16,6 @@ class VCJumpscare(commands.Cog):
         if chance != 1:
             return
         
-        # Get all active voice channels
         active_vcs = []
         for guild in self.bot.guilds:
             for vc in guild.voice_channels:
@@ -35,13 +34,15 @@ class VCJumpscare(commands.Cog):
         try:
             voice_client = await vc.connect()
             print(f"Joined {vc.name} in {vc.guild.name} to play {audio_file}")
-
             source = discord.FFmpegPCMAudio(audio_file)
-            # Ensure the bot disconnects after playing
-            def after_playing():
+
+            def after_playing(error):
+                if error:
+                    print(f"Error playing audio: {error}")
                 self.bot.loop.create_task(self.disconnect_vc(voice_client))
             
             voice_client.play(source, after=after_playing)
+
 
         except discord.ClientException:
             print(f"Already in a voice channel in {vc.guild.name}")
@@ -56,7 +57,7 @@ class VCJumpscare(commands.Cog):
         if not files:
             print("No audio files found in the folder.")
             return None
-        print(f"Selected audio file: {files[0]}")  # Print the file being selected
+        print(f"Selected audio file: {files[0]}")
         return os.path.join(AUDIO_FOLDER, random.choice(files))
 
 
@@ -77,11 +78,13 @@ class VCJumpscare(commands.Cog):
             print(f"Joined {vc.name} in {vc.guild.name} to play {audio_file}")
 
             source = discord.FFmpegPCMAudio(audio_file)
-            # Ensure the bot disconnects after playing
-            def after_playing():
+
+            def after_playing(error):
+                if error:
+                    print(f"Error playing audio: {error}")
                 self.bot.loop.create_task(self.disconnect_vc(voice_client))
             
-            voice_client.play(source, after=after_playing)
+            voice_client.play(source, after=lambda error: after_playing(error))
 
         except discord.ClientException:
             await ctx.send(f"Already in a voice channel in {vc.guild.name}")
