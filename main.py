@@ -19,7 +19,10 @@ bot = commands.Bot(command_prefix="$", intents=intents)
 # Load cogs dynamically
 COGS = [
     "cogs.events",
-    "cogs.leveling"
+    "cogs.leveling",
+    "cogs.wordcount",
+    "cogs.impregnate",
+    "cogs.vcjumpscare"
 ]
 
 # Send a message to the console when the bot is ready

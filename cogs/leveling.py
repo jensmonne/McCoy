@@ -2,7 +2,7 @@ import discord
 import random
 import json
 from discord.ext import commands
-from config import required_level_xp, LEVEL_UP_EMOJIS, LEVEL_SHOW_EMOJIS
+from config import required_level_xp, is_admin_or_owner, LEVEL_UP_EMOJIS, LEVEL_SHOW_EMOJIS
 
 class Leveling(commands.Cog):
     def __init__(self, bot):
@@ -87,7 +87,7 @@ class Leveling(commands.Cog):
 
     ### --- LEVELING COMMANDS --- ###
 
-    @commands.command(name="level")
+    @commands.command(name="level", aliases=["lvl", "l"], case_insensitive=True)
     async def level(self, ctx):
         user_id = str(ctx.author.id)
         guild_id = str(ctx.guild.id)
@@ -104,7 +104,7 @@ class Leveling(commands.Cog):
             await ctx.send(f"🤔 {ctx.author.mention}, you haven't earned any XP yet!")
 
     @commands.command(name="setlevelupchannel", aliases=["setlevelchannel", "slc", "setlc"], case_insensitive=True)
-    @commands.has_permissions(administrator=True)
+    @is_admin_or_owner()
     async def set_levelup_channel(self, ctx, channel: discord.TextChannel):
         guild_id = str(ctx.guild.id)
 
@@ -124,7 +124,7 @@ class Leveling(commands.Cog):
             return
 
         # update and save the new level-up channel
-        self.config[guild_id]["levelup_channel"] = str(channel.id)
+        self.config[guild_id]["levelup_channel"] = str(new_channel_id)
         self.save_config(self.config)
 
         await ctx.send(f"Level up messages will now be sent in {channel.mention}")
