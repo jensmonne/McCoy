@@ -13,7 +13,7 @@ class Impregnate(commands.Cog):
 
     async def get_pregnant_emoji(self):
         # Randomize impregnation
-        chance = random.randint(1, 120)
+        chance = random.randint(1, 180)
 
         if chance == 42:
             return "🤰" 

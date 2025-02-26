@@ -12,7 +12,7 @@ class VCJumpscare(commands.Cog):
 
     @tasks.loop(minutes=1)
     async def random_vc_join(self):
-        chance = random.randint(1, 120)
+        chance = random.randint(1, 180)
         if chance != 1:
             return
         
@@ -61,7 +61,7 @@ class VCJumpscare(commands.Cog):
         return os.path.join(AUDIO_FOLDER, random.choice(files))
 
 
-    @commands.command()
+    @commands.command(name="jumpscare", aliases=["jsjoin", "jsj"], case_insensitive=True)
     async def joinvc(self, ctx):
         if not ctx.author.voice or not ctx.author.voice.channel:
             await ctx.send("You must be in a voice channel to use this command.")

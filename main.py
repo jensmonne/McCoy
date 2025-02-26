@@ -20,9 +20,10 @@ bot = commands.Bot(command_prefix="$", intents=intents)
 COGS = [
     "cogs.events",
     "cogs.leveling",
-    "cogs.wordcount",
     "cogs.impregnate",
-    "cogs.vcjumpscare"
+    "cogs.vcjumpscare",
+    "cogs.birthday",
+    "cogs.kick",
 ]
 
 # Send a message to the console when the bot is ready
