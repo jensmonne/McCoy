@@ -23,7 +23,7 @@ COGS = [
     "cogs.impregnate",
     "cogs.vcjumpscare",
     "cogs.birthday",
-    "cogs.kick",
+    "cogs.vckick",
 ]
 
 # Send a message to the console when the bot is ready

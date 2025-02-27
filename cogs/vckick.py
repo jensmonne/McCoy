@@ -6,6 +6,7 @@ import os
 # Load environment variables
 load_dotenv()
 CHLOE_ID = int(os.getenv('CHLOE_ID'))
+BRANDON_ID = int(os.getenv('BRANDON_ID'))
 
 class kick(commands.Cog):
     def __init__(self, bot):
@@ -27,9 +28,19 @@ class kick(commands.Cog):
         user = ctx.guild.get_member(CHLOE_ID)
         if user is not None and user.voice is not None and user.voice.channel is not None:
             await user.move_to(None)
-            print("Chloe was a slut.")
+            print("Chloe was a slut!")
         else:
-            print("Chloe is not a slut.")
+            print("Chloe was not a slut!")
+
+    @commands.command(case_insensitive=True)
+    @is_admin_or_owner()
+    async def brandon(self, ctx):
+        user = ctx.guild.get_member(BRANDON_ID)
+        if user is not None and user.voice is not None and user.voice.channel is not None:
+            await user.edit(mute=True)
+            print(f"Brandon was a pedophile.")
+        else:
+            print(f"Brandon was not a pedophile.")
 
 # Add the Cog to the bot
 async def setup(bot):
