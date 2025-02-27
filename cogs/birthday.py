@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands, tasks
 import datetime
 import json
+import time
 from config import is_admin_or_owner
 
 class Birthday(commands.Cog):
@@ -130,6 +131,15 @@ class Birthday(commands.Cog):
     @check_birthdays.before_loop
     async def before_check_birthdays(self):
         await self.bot.wait_until_ready()
+
+        now = datetime.datetime.now()
+        target_time = datetime.datetime.combine(now.date(), datetime.time(10, 0))
+
+        if now > target_time:
+            await self.check_birthdays()
+            target_time += datetime.timedelta(days=1)
+            
+        await discord.utils.sleep_until(target_time)
 
 # Add the Cog to the bot
 async def setup(bot):
