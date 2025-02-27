@@ -56,7 +56,14 @@ class Birthday(commands.Cog):
                 display_date = birthday.strftime("%m-%d")
             else:
                 raise ValueError
-            self.birthdays[str(ctx.author.id)] = date
+
+            guild_id = str(ctx.guild.id)
+            user_id = str(ctx.author.id)
+
+            if guild_id not in self.birthdays:
+                self.birthdays[guild_id] = {}
+
+            self.birthdays[guild_id][user_id] = date
             self.save_birthdays()
             await ctx.send(f"Birthday set for {ctx.author.mention} on {display_date}!")
         except ValueError:
@@ -64,7 +71,9 @@ class Birthday(commands.Cog):
 
     @commands.command(name="birthday", aliases=["bd"], case_insensitive=True)
     async def my_birthday(self, ctx):
-        birthday = self.birthdays.get(str(ctx.author.id))
+        guild_id = str(ctx.guild.id)
+        user_id = str(ctx.author.id)
+        birthday = self.birthdays.get(guild_id, {}).get(user_id)
         if birthday:
             await ctx.send(f"Your birthday is on {birthday}!")
         else:
@@ -92,30 +101,30 @@ class Birthday(commands.Cog):
         today = datetime.date.today()
         today_str = today.strftime("%Y-%m-%d")
         today_md = today.strftime("%m-%d")
-        for user_id, birthday in self.birthdays.items():
-            if birthday.endswith(today_md) and self.logged_birthdays.get(user_id) != today_str:
-                user = self.bot.get_user(int(user_id))
-                if user:
-                    guild_id = str(user.guild.id)
-                    channel_id = self.config.get(guild_id, {}).get("birthday_channel")
-                    if channel_id:
-                        birthday_channel = self.bot.get_channel(int(channel_id))
-                    else:
-                        birthday_channel = None
+        for guild_id, guild_birthdays in self.birthdays.items():
+            for user_id, birthday in guild_birthdays.items():
+                if birthday.endswith(today_md) and self.logged_birthdays.get(user_id) != today_str:
+                    user = self.bot.get_user(int(user_id))
+                    if user:
+                        channel_id = self.config.get(guild_id, {}).get("birthday_channel")
+                        if channel_id:
+                            birthday_channel = self.bot.get_channel(int(channel_id))
+                        else:
+                            birthday_channel = None
 
-                    if len(birthday) == 10:
-                        birth_year = int(birthday[:4])
-                        age = today.year - birth_year
-                        message = f"Happy {age}th Birthday, {user.mention}! 🎉🎂"
-                    else:
-                        message = f"Happy Birthday, {user.mention}! 🎉🎂"
+                        if len(birthday) == 10:
+                            birth_year = int(birthday[:4])
+                            age = today.year - birth_year
+                            message = f"Happy {age}th Birthday, {user.mention}! 🎉🎂"
+                        else:
+                            message = f"Happy Birthday, {user.mention}! 🎉🎂"
 
-                    if birthday_channel:
-                        await birthday_channel.send(message)
-                    else:
-                        await user.send(message)
+                        if birthday_channel:
+                            await birthday_channel.send(message)
+                        else:
+                            await user.send(message)
 
-                self.logged_birthdays[user_id] = today_str
+                    self.logged_birthdays[user_id] = today_str
         self.save_logged_birthdays()
 
     @check_birthdays.before_loop
