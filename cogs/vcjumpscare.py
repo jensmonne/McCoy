@@ -3,7 +3,11 @@ import random
 import os
 from discord.ext import commands, tasks
 
-AUDIO_FOLDER = "assets/audio"
+# Windows
+# AUDIO_FOLDER = "assets/audio"
+
+# Linux
+AUDIO_FOLDER = "/home/jeans/bot/McCoy/assets/audio"
 
 class VCJumpscare(commands.Cog):
     def __init__(self, bot):

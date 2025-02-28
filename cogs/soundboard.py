@@ -2,7 +2,11 @@ import discord
 import os
 from discord.ext import commands
 
-AUDIO_FOLDER = "assets/soundboard"
+# Windows
+# AUDIO_FOLDER = "assets/soundboard"
+
+# Linux
+AUDIO_FOLDER = "/home/jeans/bot/McCoy/assets/soundboard"
 
 class Soundboard(commands.Cog):
     def __init__(self, bot):
