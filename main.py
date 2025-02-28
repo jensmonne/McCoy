@@ -24,6 +24,7 @@ COGS = [
     "cogs.vcjumpscare",
     "cogs.birthday",
     "cogs.vckick",
+    "cogs.soundboard",
 ]
 
 # Send a message to the console when the bot is ready
