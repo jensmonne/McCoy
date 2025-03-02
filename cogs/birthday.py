@@ -2,7 +2,6 @@ import discord
 from discord.ext import commands, tasks
 import datetime
 import json
-import time
 from config import is_admin_or_owner
 
 class Birthday(commands.Cog):

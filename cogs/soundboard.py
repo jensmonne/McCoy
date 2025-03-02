@@ -54,6 +54,18 @@ class Soundboard(commands.Cog):
             await voice_client.disconnect()
             print("Left voice channel after playing audio.")
 
+    @commands.command(name="path", case_insensitive=True)
+    async def list_files(self, ctx):
+        try:
+            files = os.listdir(AUDIO_FOLDER)
+            if not files:
+                await ctx.send("No files found in the audio folder.")
+            else:
+                file_list = "\n".join(files)
+                await ctx.send(f"Files in the audio folder:\n{file_list}")
+        except Exception as e:
+            await ctx.send(f"Error accessing the audio folder: {e}")
+
 # Add the Cog to the bot
 async def setup(bot):
     await bot.add_cog(Soundboard(bot))
