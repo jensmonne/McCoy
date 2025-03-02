@@ -1,10 +1,34 @@
-# Ignore the .env file
+# dependencies (bun install)
+node_modules
+
+# output
+out
+dist
+*.tgz
+
+# code coverage
+coverage
+*.lcov
+
+# logs
+logs
+_.log
+report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
+
+# dotenv environment variable files
 .env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
 
-# Ignore the pychace files
-__pycache__
+# caches
+.eslintcache
+.cache
+*.tsbuildinfo
 
-venv/
+# IntelliJ based IDEs
+.idea
 
-# Ignore the .json files
-*.json
+# Finder (MacOS) folder config
+.DS_Store

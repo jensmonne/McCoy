@@ -1,18 +1,15 @@
-# McCoy
+# mccoy
 
-To-Do list:
+To install dependencies:
 
-Daily Streaks
-Level Leaderboard
-wordcount
-vc levels
-vc + text levels
-logging?
-birthday
-vc logger
-daily questions
-achievements
-join/quit logging
-level roles
-ping list
-quotes
+```bash
+bun install
+```
+
+To run:
+
+```bash
+bun run index.ts
+```
+
+This project was created using `bun init` in bun v1.2.4. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
