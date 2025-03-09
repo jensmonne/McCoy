@@ -96,7 +96,7 @@ class Leveling(commands.Cog):
                     levelup_channel = message.channel # Default to the current channel
 
             # Send level-up message
-            await levelup_channel.send(f"{random_emoji} Congratulations {message.author.mention}, you have leveled up to level {self.xp_data[guild_id][user_id]['level']}!")
+            await levelup_channel.send(f"{random_emoji} Congratulations {message.author.name} ||{message.author.id}||, you have leveled up to level {self.xp_data[guild_id][user_id]['level']}!")
 
         #Save XP data
         self.save_xp(self.xp_data)
@@ -115,7 +115,7 @@ class Leveling(commands.Cog):
             xp = self.xp_data[guild_id][user_id]["xp"]
             xp_needed_next = required_level_xp(level)
 
-            await ctx.send(f"{random_emoji} {ctx.author.mention}, you are level **Level {level}** with **{xp}/{xp_needed_next} XP**.")
+            await ctx.send(f"{random_emoji} {ctx.author.name}, you are level **Level {level}** with **{xp}/{xp_needed_next} XP**.")
         else:
             await ctx.send(f"🤔 {ctx.author.mention}, you haven't earned any XP yet!")
 
