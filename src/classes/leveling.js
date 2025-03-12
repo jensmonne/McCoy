@@ -2,11 +2,6 @@ import { LEVEL_UP_EMOJIS, LEVEL_SHOW_EMOJIS, IsAdminOrOwner, RequiredLevelXp } f
 import fs from 'node:fs';
 import path from 'node:path';
 
-export const data = {
-    name: 'level',
-    description: 'Shows your current level and XP.',
-};
-
 class Leveling {
     constructor(client) {
         this.client = client;
@@ -14,6 +9,7 @@ class Leveling {
         this.config = this.LoadConfig();
         this.lastMessageTime = {};
 
+        this.client.leveling = this;
         this.client.on('messageCreate', this.OnMessage.bind(this));
     }
 

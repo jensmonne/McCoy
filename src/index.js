@@ -1,8 +1,8 @@
 import { Client, Collection, GatewayIntentBits } from 'discord.js';
 import fs from 'node:fs';
 import path from 'node:path';
-import Leveling from './commands/leveling.js';
 import dotenv from 'dotenv';
+import Leveling from './classes/leveling.js';
 
 dotenv.config();
 
@@ -18,7 +18,12 @@ const commandFiles = fs.readdirSync(commandPath).filter(file => file.endsWith('.
 
 await Promise.all(commandFiles.map(async (file) => {
     const command = await import(path.join(commandPath, file));
-    client.commands.set(command.data.name, command);
+    // biome-ignore lint/complexity/useOptionalChain: <explanation>
+    if (command.data && command.data.name && typeof command.execute === 'function') {
+        client.commands.set(command.data.name, command);
+    } else {
+        console.warn(`The command at ${file} is missing a required "data" property or "execute" method.`);
+    }
 }));
 
 const eventPath = path.join(__dirname, 'events');
