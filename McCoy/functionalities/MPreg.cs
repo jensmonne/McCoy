@@ -8,7 +8,6 @@ public class MPreg
     {
         if (message.Content == gay)
         {
-
                 var MalePregnancy = new Emoji("🫃");
                 await message.AddReactionAsync(MalePregnancy);
         }
