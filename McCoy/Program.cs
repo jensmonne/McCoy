@@ -6,8 +6,6 @@ class Program
 {
     private static DiscordSocketClient? _client;
 
-    // public static Task Main(string[] args) => new Program().MainAsync();
-
     public static async Task Main()
     {
         _client = new DiscordSocketClient();
@@ -31,3 +29,4 @@ class Program
         return Task.CompletedTask;
     }
 }
+// hiiii :333
