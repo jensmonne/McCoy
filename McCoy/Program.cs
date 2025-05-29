@@ -8,9 +8,15 @@ class Program
 
     public static async Task Main()
     {
-        _client = new DiscordSocketClient();
+        var config = new DiscordSocketConfig
+        {
+            GatewayIntents = GatewayIntents.Guilds | GatewayIntents.GuildMessages | GatewayIntents.MessageContent
+        };
+        
+        _client = new DiscordSocketClient(config);
         
         _client.Log += Log;
+        _client.MessageReceived += OnMessageReceived;
         
         Env.Load();
 
@@ -28,5 +34,14 @@ class Program
         Console.WriteLine(msg.ToString());
         return Task.CompletedTask;
     }
+
+    private static async Task OnMessageReceived(SocketMessage message)
+    {
+        if (message.Author.IsBot) return;
+
+        if (message.Content == "!fart")
+        {
+            await message.Channel.SendMessageAsync("FART!");
+        }
+    }
 }
-// hiiii :333
