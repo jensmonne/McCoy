@@ -2,6 +2,7 @@
 using Discord.WebSocket;
 using DotNetEnv;
 using McCoy.Handlers;
+
 class Program
 {
     private static DiscordSocketClient? _client;
@@ -18,11 +19,10 @@ class Program
         _client = new DiscordSocketClient(config);
         
         _client.Log += Log;
+        _client.Ready += () => ReadyHandler.OnReady(_client);
         _client.MessageReceived += MessageHandler.HandleMessage;
-        
 
-        var token = Environment.GetEnvironmentVariable("DISCORD_TOKEN")
-            ?? throw new InvalidOperationException("DISCORD_TOKEN is not set.");
+        string token = Env.GetString("DISCORD_TOKEN");
         
         await _client.LoginAsync(TokenType.Bot, token);
         await _client.StartAsync();
