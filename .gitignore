@@ -1,0 +1,10 @@
+# Ignore the .env file
+.env
+
+# Ignore the pychace files
+__pycache__
+
+venv/
+
+# Ignore the .json files
+*.json
