@@ -6,7 +6,7 @@ namespace McCoy.Handlers;
 
 public static class MessageHandler
 {
-    private static readonly string ChloeId = Env.GetString("CHLOE_ID");
+    private static readonly string pregnantUserId = Env.GetString("PREGNANT_USER_ID");
     
     public static async Task HandleMessage(SocketMessage message)
     {
@@ -14,7 +14,7 @@ public static class MessageHandler
 
         var content = message.Content.Trim().ToLower();
 
-        if (message.Author.Id.ToString() == ChloeId || content.Contains("gay"))
+        if (message.Author.Id.ToString() == pregnantUserId || content.Contains("gay"))
         {
             bool isGay = content.Contains("gay");
             Impregnate.Impregnation(message, isGay);
