@@ -1,5 +1,4 @@
-﻿using System.Security.Cryptography;
-using Discord;
+﻿using Discord;
 using Discord.WebSocket;
 
 namespace McCoy.Handlers.Messages;
@@ -7,9 +6,6 @@ namespace McCoy.Handlers.Messages;
 public class Impregnate
 {
     private static readonly Random random = new Random();
-    public Impregnate()
-    {
-    }
 
     public static void Impregnation(SocketMessage message, bool isGay)
     {
