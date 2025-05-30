@@ -11,7 +11,7 @@ public class Impregnate
         var MalePregnancy = new Emoji("🫃");
         message.AddReactionAsync(MalePregnancy);
         
-        if (message, bool isGay)
+        if (isGay)
         {
             message.AddReactionAsync(MalePregnancy);
         }
