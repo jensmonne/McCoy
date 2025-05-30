@@ -1,6 +1,6 @@
 ﻿using Discord.WebSocket;
 using DotNetEnv;
-using McCoy.Modules;
+using McCoy.Handlers.Messages;
 
 namespace McCoy.Handlers;
 

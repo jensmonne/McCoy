@@ -4,6 +4,8 @@ using DotNetEnv;
 
 namespace McCoy.Modules;
 
+// This stuff will probably be handled by a seperate watchdog discord bot
+
 public static class BotEmbedGenerator
 {
     private static readonly DateTime _startTime = DateTime.UtcNow;
@@ -29,7 +31,7 @@ public static class BotEmbedGenerator
         var uptime = DateTime.UtcNow - _startTime;
 
         var embed = new EmbedBuilder()
-            .WithTitle("🤖 McCoy Bot Online")
+            .WithTitle("🤖 McCoy is Online")
             .WithColor(Color.Green)
             .AddField("Status", client.Status.ToString(), true)
             .AddField("Uptime", FormatTimeSpan(uptime), true)
@@ -38,8 +40,7 @@ public static class BotEmbedGenerator
             .WithFooter(footer => footer.Text = $"Last updated at {DateTime.UtcNow:u}")
             .WithTimestamp(DateTimeOffset.UtcNow)
             .Build();
-
-        // Try to load existing message
+        
         if (_statusMessage == null)
         {
             ulong? messageId = LoadMessageId();
