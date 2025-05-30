@@ -15,7 +15,7 @@ class Bot
         
         var config = new DiscordSocketConfig
         {
-            GatewayIntents = GatewayIntents.All
+            GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.GuildMembers | GatewayIntents.Guilds | GatewayIntents.GuildMessages,
         };
         
         _client = new DiscordSocketClient(config);
