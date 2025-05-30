@@ -22,9 +22,6 @@ public static class MessageHandler
 
         switch (content)
         {
-            case "!fart":
-                await message.Channel.SendMessageAsync("FART!");
-                break;
             case "hi":
                 await message.Channel.SendMessageAsync(
                     "My name is Walter Hartwell White. " +
@@ -34,9 +31,6 @@ public static class MessageHandler
                     "I hope you know that. Walter Jr., you're my big man. " +
                     "There are going to be some things that you'll come to learn about me in the next few days. " +
                     "But just know that no matter how it may look, I only had you in my heart. Goodbye.");
-                break;
-            case "ping":
-                await message.Channel.SendMessageAsync("Pong!");
                 break;
             case "hello there":
                 await message.Channel.SendMessageAsync("General Kenobi");
