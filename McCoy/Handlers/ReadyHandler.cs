@@ -12,6 +12,6 @@ public static class ReadyHandler
         await client.SetGameAsync("you 🕵️", type: ActivityType.Watching);
 
         await BotEmbedGenerator.GenerateBotEmbed(client);
-        _ = BotEmbedGenerator.StartAutoUpdate(client, 5);
+        _ = BotEmbedGenerator.StartAutoUpdate(client, 30);
     }
 }

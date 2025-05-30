@@ -4,7 +4,7 @@ namespace McCoy.Handlers;
 
 public static class LogHandler
 {
-    public static Task HandleMessage(LogMessage message)
+    public static Task HandleLog(LogMessage message)
     {
         Console.ForegroundColor = GetColor(message.Severity);
         Console.WriteLine($"[{message.Severity}] {message.Source}: {message.Message}");
