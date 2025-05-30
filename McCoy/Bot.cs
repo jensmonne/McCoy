@@ -1,5 +1,6 @@
-﻿using Discord;
-//using Discord.Interactions;
+﻿using System.Reflection;
+using Discord;
+using Discord.Interactions;
 using Discord.WebSocket;
 using DotNetEnv;
 using McCoy.Handlers;
@@ -7,7 +8,8 @@ using McCoy.Handlers;
 class Bot
 {
     private static DiscordSocketClient? _client;
-    //private static InteractionService? _interaction;
+    private static InteractionService? _interaction;
+    private static IServiceProvider _services;
 
     public static async Task Main()
     {
@@ -19,16 +21,20 @@ class Bot
         };
         
         _client = new DiscordSocketClient(config);
-        // _interaction = new InteractionService(_client.Rest);
+        _interaction = new InteractionService(_client.Rest);
+        InteractionHandler.Initialize(_client, _interaction, _services);
         
         _client.Log += LogHandler.HandleLog;
-        // _interaction.Log += LogHandler.HandleMessage;
-        _client.Ready += () => ReadyHandler.OnReady(_client);
+        _interaction.Log += LogHandler.HandleLog;
+        _client.Ready += () => ReadyHandler.OnReady(_client, _interaction);
+        _client.InteractionCreated += InteractionHandler.HandleInteraction;
         _client.MessageReceived += MessageHandler.HandleMessage;
 
         string token = Env.GetString("DISCORD_TOKEN");
         await _client.LoginAsync(TokenType.Bot, token);
         await _client.StartAsync();
+        
+        await _interaction.AddModulesAsync(Assembly.GetEntryAssembly(), _services);
         
         var cts = new CancellationTokenSource();
         Console.CancelKeyPress += (sender, e) =>
