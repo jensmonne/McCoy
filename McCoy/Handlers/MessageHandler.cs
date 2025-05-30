@@ -16,7 +16,8 @@ public static class MessageHandler
 
         if (message.Author.Id.ToString() == ChloeId || content.Contains("gay"))
         {
-            Impregnate.Impregnation(message);
+            bool isGay = content.Contains("gay");
+            Impregnate.Impregnation(message, isGay);
         }
 
         switch (content)
