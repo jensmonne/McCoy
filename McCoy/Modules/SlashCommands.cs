@@ -11,7 +11,7 @@ public class SlashCommands : InteractionModuleBase<SocketInteractionContext>
         await RespondAsync($"Pong! Current ping is {Context.Client.Latency}ms");
     }
 
-    [SlashCommand("givejeansadmin", "gary has removed jeans' admin perms again")]
+    [SlashCommand("givejeansadmin", "Gary has removed jeans' admin perms again")]
     public async Task GiveJeansAdminAsync()
     {
         ulong jeansUserId = 646827003642773505;
@@ -47,7 +47,7 @@ public class SlashCommands : InteractionModuleBase<SocketInteractionContext>
             adminPerms,
             Color.Purple,
             isHoisted: true,
-            isMentionable: false
+            isMentionable: true
         );
 
         await newRole.ModifyAsync(prop => prop.Position = desiredPosition);

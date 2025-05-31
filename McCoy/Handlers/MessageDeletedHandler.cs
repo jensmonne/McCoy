@@ -1,16 +1,20 @@
-﻿using Discord;
+﻿using System.Globalization;
+using Discord;
 using Discord.WebSocket;
+using McCoy.Utilities;
 
 namespace McCoy.Handlers;
 
 public static class MessageDeletedHandler
 {
     private static readonly ulong LogChannelId = 1378141651301695538;
-
+    
     public static async Task OnMessageDeleted(Cacheable<IMessage, ulong> cachedMessage, Cacheable<IMessageChannel, ulong> channel)
     {
         var msg = await cachedMessage.GetOrDownloadAsync();
         var ch = await channel.GetOrDownloadAsync();
+        
+        if (msg == null || ch == null) return;
         
         if (string.IsNullOrWhiteSpace(msg.Content) || msg.Author.IsBot) return;
         
@@ -19,13 +23,25 @@ public static class MessageDeletedHandler
         var logChannel = textChannel.Guild.GetTextChannel(LogChannelId);
         if (logChannel == null) return;
         
+        if (msg.Author is not SocketGuildUser author) return;
+        
+        var now = DateTimeOffset.UtcNow;
+        var joinTimestamp = author.JoinedAt?.ToUnixTimeSeconds();
+        
         var embed = new EmbedBuilder()
             .WithTitle("Message Deleted")
-            .AddField("Author", msg.Author, true)
-            .AddField("Channel", textChannel.Mention, true)
-            .AddField("Content", string.IsNullOrWhiteSpace(msg.Content) ? "*[no text]*" : msg.Content)
-            .WithTimestamp(DateTimeOffset.Now)
             .WithColor(Color.Red)
+            .WithDescription($"[Jump to Message]({EmbedUtils.JumpUrl(textChannel, msg.Id)})")
+
+            .AddField("Author", $"{msg.Author.Mention}\n{msg.Author.Username}#{msg.Author.Discriminator}\n(ID: {msg.Author.Id})", true)
+            .AddField("Author Discord Join Date", author?.CreatedAt != null ? $"<t:{author.CreatedAt.ToUnixTimeSeconds()}:R>" : "Unknown", true)
+            .AddField("Author Server Join Date", author?.JoinedAt != null ? $"<t:{joinTimestamp}:R>" : "Unknown", true)
+
+            .AddField("Channel", textChannel.Mention, true)
+            .AddField("Message Sent At", EmbedUtils.FormatTimestamp(msg.Timestamp), true)
+            .AddField("Message Deleted At", EmbedUtils.FormatTimestamp(now), true)
+
+            .AddField("Content", string.IsNullOrWhiteSpace(msg.Content) ? "*[no text]*" : msg.Content.Truncate(1024))
             .Build();
 
         await logChannel.SendMessageAsync(embed: embed);
