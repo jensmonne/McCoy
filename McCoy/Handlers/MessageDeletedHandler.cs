@@ -12,15 +12,12 @@ public static class MessageDeletedHandler
         var msg = await cachedMessage.GetOrDownloadAsync();
         var ch = await channel.GetOrDownloadAsync();
         
-        if (string.IsNullOrWhiteSpace(msg.Content) || msg.Author.IsBot)
-            return;
+        if (string.IsNullOrWhiteSpace(msg.Content) || msg.Author.IsBot) return;
         
-        if (ch is not SocketTextChannel textChannel)
-            return;
+        if (ch is not SocketTextChannel textChannel) return;
         
         var logChannel = textChannel.Guild.GetTextChannel(LogChannelId);
-        if (logChannel == null)
-            return;
+        if (logChannel == null) return;
         
         var embed = new EmbedBuilder()
             .WithTitle("Message Deleted")

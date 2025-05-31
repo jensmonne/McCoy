@@ -18,7 +18,7 @@ class Bot
         var config = new DiscordSocketConfig
         {
             MessageCacheSize = 1000,
-            GatewayIntents = GatewayIntents.GuildMembers | GatewayIntents.Guilds | GatewayIntents.GuildMessages | GatewayIntents.MessageContent
+            GatewayIntents = GatewayIntents.GuildMembers | GatewayIntents.Guilds | GatewayIntents.GuildMessages | GatewayIntents.MessageContent | GatewayIntents.GuildVoiceStates
         };
         
         _client = new DiscordSocketClient(config);
@@ -32,6 +32,7 @@ class Bot
         _client.MessageReceived += MessageHandler.HandleMessage;
         _client.MessageDeleted += MessageDeletedHandler.OnMessageDeleted;
         _client.MessageUpdated += MessageUpdatedHandler.OnMessageUpdated;
+        _client.UserVoiceStateUpdated += VoiceHandler.OnUserVoiceStateUpdated;
 
         string token = Env.GetString("DISCORD_TOKEN");
         await _client.LoginAsync(TokenType.Bot, token);
