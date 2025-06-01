@@ -1,22 +1,27 @@
 ﻿using Discord.WebSocket;
 using DotNetEnv;
 using McCoy.Handlers.Messages;
+using McCoy.Modules;
 
 namespace McCoy.Handlers;
 
 public static class MessageHandler
 {
-    private static readonly string pregnantUserId = Env.GetString("PREGNANT_USER_ID");
-    
     public static async Task HandleMessage(SocketMessage message)
     {
         if (message.Author.IsBot) return;
 
         var content = message.Content.Trim().ToLower();
 
-        if (message.Author.Id.ToString() == pregnantUserId || content.Contains("gay"))
+        bool isPregnantUser = false;
+        if (message.Channel is SocketGuildChannel guildChannel)
         {
-            bool isGay = content.Contains("gay");
+            isPregnantUser = UserConfigService.IsUserInGroup(guildChannel.Guild.Id, UserTypes.Pregnant, message.Author.Id);
+        }
+
+        bool isGay = content.Contains("gay");
+        if (isPregnantUser || isGay)
+        {
             Impregnate.Impregnation(message, isGay);
         }
 

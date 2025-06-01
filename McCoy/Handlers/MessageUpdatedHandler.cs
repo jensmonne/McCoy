@@ -1,27 +1,27 @@
-﻿using System.Globalization;
-using Discord;
+﻿using Discord;
 using Discord.WebSocket;
+using McCoy.Modules;
 using McCoy.Utilities;
 
 namespace McCoy.Handlers;
 
 public static class MessageUpdatedHandler
 {
-    private static readonly ulong LogChannelId = 1378141651301695538;
-
     public static async Task OnMessageUpdated(Cacheable<IMessage, ulong> before, SocketMessage after, ISocketMessageChannel channel)
     {
         if (after.Author.IsBot || string.IsNullOrWhiteSpace(after.Content)) return;
 
         var beforeMsg = await before.GetOrDownloadAsync();
         if (beforeMsg == null || beforeMsg.Content == after.Content) return;
-
         if (channel is not SocketTextChannel textChannel) return;
+        if (after.Author is not SocketGuildUser author) return;
 
-        var logChannel = textChannel.Guild.GetTextChannel(LogChannelId);
+        var channelId = ChannelConfigService.GetChannel(textChannel.Guild.Id, ChannelTypes.EditLogs);
+        if (channelId is not ulong logChannelId) return;
+        
+        var logChannel = textChannel.Guild.GetTextChannel(logChannelId);
         if (logChannel == null) return;
 
-        if (after.Author is not SocketGuildUser author) return;
         var joinTimestamp = author.JoinedAt?.ToUnixTimeSeconds();
         
         var embed = new EmbedBuilder()

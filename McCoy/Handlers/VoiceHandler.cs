@@ -1,12 +1,12 @@
 ﻿using Discord;
 using Discord.WebSocket;
+using McCoy.Modules;
 using McCoy.Utilities;
 
 namespace McCoy.Handlers;
 
 public static class VoiceHandler
 {
-    private static readonly ulong LogChannelId = 1378141651301695538;
     private static readonly Dictionary<ulong, DateTime> VoiceJoinTimes = new();
 
     public static async Task OnUserVoiceStateUpdated(SocketUser user, SocketVoiceState before, SocketVoiceState after)
@@ -16,12 +16,14 @@ public static class VoiceHandler
         var guildUser = user as SocketGuildUser;
         var guild = guildUser?.Guild;
         if (guild == null) return;
+        
+        var channelId = ChannelConfigService.GetChannel(guild.Id, ChannelTypes.VoiceLogs);
+        if (channelId is not ulong logChannelId) return;
 
-        var logChannel = guild.GetTextChannel(LogChannelId);
+        var logChannel = guild.GetTextChannel(logChannelId);
         if (logChannel == null) return;
 
-        var embed = new EmbedBuilder()
-            .WithAuthor(user);
+        var embed = new EmbedBuilder().WithAuthor(user);
 
         // JOIN
         if (before.VoiceChannel == null && after.VoiceChannel != null)
@@ -29,7 +31,7 @@ public static class VoiceHandler
             VoiceJoinTimes[user.Id] = DateTime.UtcNow;
 
             embed.WithTitle("Voice Channel Join")
-                 .WithColor(Color.Blue)
+                 .WithColor(Color.Green)
                  .AddField("User", $"<@{user.Id}>", true)
                  .AddField("Channel", after.VoiceChannel.Name, true);
         }
@@ -44,7 +46,7 @@ public static class VoiceHandler
                 : "unknown";
 
             embed.WithTitle("Voice Channel Leave")
-                 .WithColor(Color.DarkGrey)
+                 .WithColor(Color.Red)
                  .AddField("User", $"<@{user.Id}>", true)
                  .AddField("Channel", before.VoiceChannel.Name, true)
                  .AddField("Time Spent", timeSpent, true);
@@ -53,7 +55,7 @@ public static class VoiceHandler
         else if (before.VoiceChannel != after.VoiceChannel)
         {
             embed.WithTitle("Voice Channel Switch")
-                 .WithColor(Color.LightGrey)
+                 .WithColor(Color.Orange)
                  .AddField("User", $"<@{user.Id}>", true)
                  .AddField("From", before.VoiceChannel.Name, true)
                  .AddField("To", after.VoiceChannel.Name, true);
@@ -62,7 +64,7 @@ public static class VoiceHandler
         else if (before.IsMuted != after.IsMuted)
         {
             var action = after.IsMuted ? "Muted" : "Unmuted";
-            var color = after.IsMuted ? Color.DarkerGrey : Color.LighterGrey;
+            var color = after.IsMuted ? Color.Red : Color.Green;
 
             embed.WithTitle(action)
                 .WithColor(color)
@@ -73,7 +75,7 @@ public static class VoiceHandler
         else if (before.IsDeafened != after.IsDeafened)
         {
             var action = after.IsDeafened ? "Deafened" : "Undeafened";
-            var color = after.IsDeafened ? Color.Orange : Color.LightGrey;
+            var color = after.IsDeafened ? Color.Red : Color.Green;
 
             embed.WithTitle(action)
                 .WithColor(color)
@@ -83,10 +85,12 @@ public static class VoiceHandler
         else if (before.IsSelfMuted != after.IsSelfMuted)
         {
             // TODO: make when muted impact the amount of leveling
+            return;
         }
         else if (before.IsSelfDeafened != after.IsSelfDeafened)
         {
             // TODO: this should probably just stop leveling entirely
+            return;
         }
         else
         {

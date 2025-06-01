@@ -1,7 +1,7 @@
 ﻿using Discord;
 using Discord.Interactions;
 
-namespace McCoy.Modules;
+namespace McCoy.Commands;
 
 public class MentionCommand : InteractionModuleBase<SocketInteractionContext>
 {

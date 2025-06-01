@@ -14,31 +14,36 @@ public static class BotEmbedGenerator
 
     public static async Task GenerateBotEmbed(DiscordSocketClient client)
     {
-        Env.Load();
-
-        if (!ulong.TryParse(Env.GetString("STATUS_CHANNEL_ID"), out ulong channelId))
+        var guild = client.Guilds.FirstOrDefault();
+        if (guild == null)
         {
-            Console.WriteLine("STATUS_CHANNEL_ID is missing or invalid in .env.");
+            Console.WriteLine("No guilds found.");
             return;
         }
 
-        if (client.GetChannel(channelId) is not IMessageChannel channel)
+        var channelId = ChannelConfigService.GetChannel(guild.Id, ChannelTypes.Status);
+        if (channelId == null)
         {
-            Console.WriteLine("Could not find status channel.");
+            Console.WriteLine("No status channel configured.");
+            return;
+        }
+
+        if (guild.GetTextChannel(channelId.Value) is not IMessageChannel channel)
+        {
+            Console.WriteLine("Configured status channel not found.");
             return;
         }
 
         var uptime = DateTime.UtcNow - _startTime;
 
         var embed = new EmbedBuilder()
-            .WithTitle("🤖 McCoy is Online")
+            .WithTitle("McCoy is Online")
             .WithColor(Color.Green)
             .AddField("Status", client.Status.ToString(), true)
             .AddField("Uptime", FormatTimeSpan(uptime), true)
             .AddField("Ping", $"{client.Latency} ms", true)
             .AddField("Version", Env.GetString("BOT_VERSION") ?? "Unknown", true)
             .WithFooter(footer => footer.Text = $"Last updated at {DateTime.UtcNow:u}")
-            .WithTimestamp(DateTimeOffset.UtcNow)
             .Build();
         
         if (_statusMessage == null)
@@ -49,10 +54,7 @@ public static class BotEmbedGenerator
                 try
                 {
                     var message = await channel.GetMessageAsync(messageId.Value);
-                    if (message is IUserMessage userMsg)
-                    {
-                        _statusMessage = userMsg;
-                    }
+                    if (message is IUserMessage userMsg) _statusMessage = userMsg;
                 }
                 catch
                 {
@@ -68,13 +70,17 @@ public static class BotEmbedGenerator
         }
         else
         {
-            await _statusMessage.ModifyAsync(msg => msg.Embed = embed);
+            try
+            {
+                await _statusMessage.ModifyAsync(msg => msg.Embed = embed);
+            }
+            catch
+            {
+                Console.WriteLine("Status message invalid. Creating a new one.");
+                _statusMessage = await channel.SendMessageAsync(embed: embed);
+                SaveMessageId(_statusMessage.Id);
+            }
         }
-    }
-
-    private static string FormatTimeSpan(TimeSpan t)
-    {
-        return $"{(int)t.TotalDays}d {t.Hours}h {t.Minutes}m {t.Seconds}s";
     }
 
     public static async Task StartAutoUpdate(DiscordSocketClient client, int intervalSeconds = 60)
@@ -106,5 +112,10 @@ public static class BotEmbedGenerator
 
         var text = File.ReadAllText(StatusMessageFile);
         return ulong.TryParse(text, out var id) ? id : null;
+    }
+    
+    private static string FormatTimeSpan(TimeSpan t)
+    {
+        return $"{(int)t.TotalDays}d {t.Hours}h {t.Minutes}m {t.Seconds}s";
     }
 }
