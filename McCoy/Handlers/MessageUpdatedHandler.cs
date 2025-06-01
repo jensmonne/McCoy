@@ -29,7 +29,7 @@ public static class MessageUpdatedHandler
             .WithColor(Color.Orange)
             .WithDescription($"[Jump to Message]({EmbedUtils.JumpUrl(textChannel, after.Id)})")
 
-            .AddField("Author", $"{author.Mention}\n{author.Username}#{author.Discriminator}\n(ID: {author.Id})", true)
+            .AddField("Author", $"{author.Mention}\n{author.Username}#{author.Discriminator}\nID: {author.Id}", true)
             .AddField("Author Discord Join Date", author?.CreatedAt != null ? $"<t:{author.CreatedAt.ToUnixTimeSeconds()}:R>" : "Unknown", true)
             .AddField("Author Server Join Date", author?.JoinedAt != null ? $"<t:{joinTimestamp}:R>" : "Unknown", true)
             

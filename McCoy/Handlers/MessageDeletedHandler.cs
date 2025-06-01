@@ -33,7 +33,7 @@ public static class MessageDeletedHandler
             .WithColor(Color.Red)
             .WithDescription($"[Jump to Message]({EmbedUtils.JumpUrl(textChannel, msg.Id)})")
 
-            .AddField("Author", $"{msg.Author.Mention}\n{msg.Author.Username}#{msg.Author.Discriminator}\n(ID: {msg.Author.Id})", true)
+            .AddField("Author", $"{msg.Author.Mention}\n{msg.Author.Username}#{msg.Author.Discriminator}\nID: {msg.Author.Id}", true)
             .AddField("Author Discord Join Date", author?.CreatedAt != null ? $"<t:{author.CreatedAt.ToUnixTimeSeconds()}:R>" : "Unknown", true)
             .AddField("Author Server Join Date", author?.JoinedAt != null ? $"<t:{joinTimestamp}:R>" : "Unknown", true)
 
