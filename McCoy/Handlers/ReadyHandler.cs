@@ -16,9 +16,9 @@ public static class ReadyHandler
         
         foreach (var guildId in ConfigService.DevGuilds)
         {
-            await interaction.RegisterCommandsToGuildAsync(guildId);
+            await interaction.RegisterCommandsToGuildAsync(guildId, true);
         }
-        await interaction.RegisterCommandsGloballyAsync();
+        
         Console.WriteLine("Commands are registered.");
     }
 }
