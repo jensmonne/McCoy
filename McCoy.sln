@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "McCoy", "McCoy\McCoy.csproj", "{F45F0106-6308-4BBA-8E45-AEBECC389DCD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F45F0106-6308-4BBA-8E45-AEBECC389DCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F45F0106-6308-4BBA-8E45-AEBECC389DCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F45F0106-6308-4BBA-8E45-AEBECC389DCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F45F0106-6308-4BBA-8E45-AEBECC389DCD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
