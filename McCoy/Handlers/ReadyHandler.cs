@@ -14,7 +14,11 @@ public static class ReadyHandler
         await BotEmbedGenerator.GenerateBotEmbed(client);
         _ = BotEmbedGenerator.StartAutoUpdate(client, 30);
         
-        await interaction.RegisterCommandsToGuildAsync(1316537594850443304);
+        foreach (var guildId in ConfigService.DevGuilds)
+        {
+            await interaction.RegisterCommandsToGuildAsync(guildId);
+        }
+        await interaction.RegisterCommandsGloballyAsync();
         Console.WriteLine("Commands are registered.");
     }
 }

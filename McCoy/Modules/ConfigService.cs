@@ -2,5 +2,7 @@
 
 public static class ConfigService
 {
-    public const string BotVersion = "0.1.0";
+    public const string BotVersion = "0.1.1";
+    
+    public static readonly ulong[] DevGuilds = { 1316537594850443304, 1145362546224799806 };
 }
