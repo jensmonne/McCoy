@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Runtime.Loader;
+using System.Reflection;
 using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
@@ -84,16 +85,22 @@ class Bot
 
     private void SetupShutdownHandlers(CancellationTokenSource cts)
     {
-        Console.CancelKeyPress += (sender, e) =>
+        AssemblyLoadContext.Default.Unloading += context =>
         {
-            Console.WriteLine("Shutting down...");
-            e.Cancel = true;
+            Console.WriteLine("Unloading triggered (SIGTERM)...");
             cts.Cancel();
         };
         
         AppDomain.CurrentDomain.ProcessExit += (sender, e) =>
         {
             Console.WriteLine("Process exiting...");
+            cts.Cancel();
+        };
+        
+        Console.CancelKeyPress += (sender, e) =>
+        {
+            Console.WriteLine("Shutting down...");
+            e.Cancel = true;
             cts.Cancel();
         };
     }
