@@ -5,7 +5,7 @@ namespace McCoy.Modules.Config;
 
 public static class UserConfigService
 {
-    private static readonly string ConfigPath = "userconfig.json";
+    private static readonly string ConfigPath = "config/userconfig.json";
     
     private static Dictionary<ulong, Dictionary<UserTypes, List<ulong>>> _data = Load();
 
@@ -22,6 +22,7 @@ public static class UserConfigService
     private static void Save()
     {
         var json = JsonSerializer.Serialize(_data, new JsonSerializerOptions { WriteIndented = true });
+        Directory.CreateDirectory(Path.GetDirectoryName(ConfigPath)!);
         File.WriteAllText(ConfigPath, json);
     }
     
