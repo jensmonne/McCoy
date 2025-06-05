@@ -1,4 +1,5 @@
-﻿using Discord.Interactions;
+﻿using Discord;
+using Discord.Interactions;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -16,6 +17,17 @@ public class Program
         var host = Host.CreateDefaultBuilder(args)
             .ConfigureServices((context, services) =>
             {
+                var config = new DiscordSocketConfig
+                {
+                    MessageCacheSize = 1000,
+                    GatewayIntents = GatewayIntents.Guilds |
+                                     GatewayIntents.GuildMessages |
+                                     GatewayIntents.MessageContent |
+                                     GatewayIntents.GuildVoiceStates |
+                                     GatewayIntents.GuildMembers
+                };
+                
+                services.AddSingleton(config);
                 services.AddSingleton<DiscordSocketClient>();
                 services.AddSingleton(provider =>
                 {
