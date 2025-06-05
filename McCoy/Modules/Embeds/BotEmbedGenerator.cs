@@ -1,8 +1,10 @@
 ﻿using Discord;
 using Discord.WebSocket;
-using DotNetEnv;
+using McCoy.Core;
+using McCoy.Modules.Config;
+using McCoy.Utilities;
 
-namespace McCoy.Modules;
+namespace McCoy.Modules.Embeds;
 
 // This stuff will probably be handled by a seperate watchdog discord bot
 
@@ -40,10 +42,10 @@ public static class BotEmbedGenerator
             .WithTitle("McCoy is Online")
             .WithColor(Color.Green)
             .AddField("Status", client.Status.ToString(), true)
-            .AddField("Uptime", FormatTimeSpan(uptime), true)
+            .AddField("Uptime", EmbedUtils.FormatDuration(uptime), true)
             .AddField("Ping", $"{client.Latency} ms", true)
             .AddField("Version", ConfigService.BotVersion, true)
-            .WithFooter(footer => footer.Text = $"Last updated at {DateTime.UtcNow:u}")
+            .WithFooter(footer => footer.Text = $"Last updated at {DateTime.UtcNow}")
             .Build();
         
         if (_statusMessage == null)
@@ -112,10 +114,5 @@ public static class BotEmbedGenerator
 
         var text = File.ReadAllText(StatusMessageFile);
         return ulong.TryParse(text, out var id) ? id : null;
-    }
-    
-    private static string FormatTimeSpan(TimeSpan t)
-    {
-        return $"{(int)t.TotalDays}d {t.Hours}h {t.Minutes}m {t.Seconds}s";
     }
 }

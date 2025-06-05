@@ -1,9 +1,11 @@
 ﻿using Discord;
 using Discord.WebSocket;
+using McCoy.Core;
 using McCoy.Modules;
+using McCoy.Modules.Config;
 using McCoy.Utilities;
 
-namespace McCoy.Handlers;
+namespace McCoy.Handlers.Voice;
 
 public static class VoiceHandler
 {

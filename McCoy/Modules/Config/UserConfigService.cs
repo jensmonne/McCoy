@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
+using McCoy.Core;
 
-namespace McCoy.Modules;
+namespace McCoy.Modules.Config;
 
 public static class UserConfigService
 {

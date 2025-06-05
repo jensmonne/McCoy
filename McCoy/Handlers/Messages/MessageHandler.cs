@@ -1,9 +1,10 @@
 ﻿using Discord.WebSocket;
-using DotNetEnv;
-using McCoy.Handlers.Messages;
+using McCoy.Core;
+using McCoy.Features.Messages;
 using McCoy.Modules;
+using McCoy.Modules.Config;
 
-namespace McCoy.Handlers;
+namespace McCoy.Handlers.Messages;
 
 public static class MessageHandler
 {
