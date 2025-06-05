@@ -2,7 +2,8 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 COPY McCoy/McCoy.csproj McCoy/
-RUN dotnet restore McCoy/McCoy.csproj
+RUN --mount=type=cache,target=/root/.nuget/packages \
+    dotnet restore McCoy/McCoy.csproj
 
 COPY . .
 RUN dotnet publish McCoy/McCoy.csproj -c Release -o /app/out
