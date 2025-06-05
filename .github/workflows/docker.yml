@@ -7,6 +7,8 @@ on:
     paths:
       - 'McCoy/**'
       - '.github/workflows/**'
+      
+  workflow_dispatch:
 
 jobs:
   build-and-push:
