@@ -17,23 +17,22 @@ public static class ReadyHandler
             await BotEmbedGenerator.GenerateBotEmbed(client);
             _ = BotEmbedGenerator.StartAutoUpdate(client, 30);
 
-            foreach (var guildId in ConfigService.DevGuilds)
+            /*foreach (var guildId in ConfigService.DevGuilds)
             {
                 var guild = client.GetGuild(guildId);
                 if (guild == null) continue;
-                
-                var globalCommands = await client.GetGlobalApplicationCommandsAsync();
-                foreach (var cmd in globalCommands)
-                {
-                    await cmd.DeleteAsync();
-                }
 
                 var existingCommands = await guild.GetApplicationCommandsAsync();
                 foreach (var cmd in existingCommands)
                 {
                     await cmd.DeleteAsync();
                 }
-
+                
+                await interaction.RegisterCommandsToGuildAsync(guildId, true);
+            }*/
+            
+            foreach (var guildId in ConfigService.DevGuilds)
+            {
                 await interaction.RegisterCommandsToGuildAsync(guildId, true);
             }
 
