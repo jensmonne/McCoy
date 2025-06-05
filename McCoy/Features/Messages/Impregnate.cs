@@ -1,7 +1,7 @@
 ﻿using Discord;
 using Discord.WebSocket;
 
-namespace McCoy.Handlers.Messages;
+namespace McCoy.Features.Messages;
 
 public class Impregnate
 {

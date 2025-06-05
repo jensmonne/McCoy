@@ -1,7 +1,7 @@
 ﻿using Discord.Interactions;
 using Discord.WebSocket;
 
-namespace McCoy.Handlers;
+namespace McCoy.Handlers.Core;
 
 public class InteractionHandler
 {

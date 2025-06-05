@@ -1,7 +1,8 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
+using McCoy.Core;
 
-namespace McCoy.Modules;
+namespace McCoy.Modules.Config;
 
 public static class ChannelConfigService
 {

@@ -1,6 +1,6 @@
 ﻿using Discord;
 
-namespace McCoy.Handlers;
+namespace McCoy.Handlers.Core;
 
 public static class LogHandler
 {

@@ -1,8 +1,10 @@
 ﻿using Discord;
 using Discord.WebSocket;
 using McCoy.Modules;
+using McCoy.Modules.Config;
+using McCoy.Modules.Embeds;
 
-namespace McCoy.Handlers;
+namespace McCoy.Handlers.Core;
 
 public static class ReadyHandler
 {

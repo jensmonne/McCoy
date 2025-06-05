@@ -1,4 +1,4 @@
-﻿namespace McCoy.Modules;
+﻿namespace McCoy.Modules.Config;
 
 public static class ConfigService
 {

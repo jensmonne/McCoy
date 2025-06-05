@@ -1,4 +1,4 @@
-﻿namespace McCoy;
+﻿namespace McCoy.Core;
 
 public enum UserTypes
 {
