@@ -1,0 +1,37 @@
+# Build output
+**/bin/
+**/obj/
+
+# .NET user-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider / IntelliJ project files
+.idea/
+*.iml
+*.iws
+
+# Docker-related files (optional)
+Dockerfile
+.dockerignore
+
+# Git
+.git/
+.gitignore
+
+# GitHub Actions
+.github/
+
+# Logs
+*.log
+
+# Markdown/docs
+README.md
+*.md
+docs/
+
+# Node/npm (if you happen to use it for frontend pieces)
+node_modules/
+*.tsbuildinfo
