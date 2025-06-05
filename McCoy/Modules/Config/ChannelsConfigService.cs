@@ -6,7 +6,7 @@ namespace McCoy.Modules.Config;
 
 public static class ChannelConfigService
 {
-    private static readonly string ConfigPath = "channelconfig.json";
+    private static readonly string ConfigPath = "config/channelconfig.json";
 
     private static Dictionary<ulong, Dictionary<ChannelTypes, ulong>> _config = Load();
 
@@ -27,6 +27,7 @@ public static class ChannelConfigService
             WriteIndented = true,
             Converters = { new JsonStringEnumConverter() }
         });
+        Directory.CreateDirectory(Path.GetDirectoryName(ConfigPath)!);
         File.WriteAllText(ConfigPath, json);
     }
 
