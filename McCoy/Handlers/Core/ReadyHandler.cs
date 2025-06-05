@@ -1,6 +1,5 @@
 ﻿using Discord;
 using Discord.WebSocket;
-using McCoy.Modules;
 using McCoy.Modules.Config;
 using McCoy.Modules.Embeds;
 
@@ -8,19 +7,33 @@ namespace McCoy.Handlers.Core;
 
 public static class ReadyHandler
 {
-    public static async Task OnReady(DiscordSocketClient client, Discord.Interactions.InteractionService interaction)
+    public static Task OnReady(DiscordSocketClient client, Discord.Interactions.InteractionService interaction)
     {
-        Console.WriteLine($"Connected as: {client.CurrentUser.Username}#{client.CurrentUser.Discriminator}");
-        await client.SetGameAsync("you 🕵️", type: ActivityType.Watching);
-
-        await BotEmbedGenerator.GenerateBotEmbed(client);
-        _ = BotEmbedGenerator.StartAutoUpdate(client, 30);
-        
-        foreach (var guildId in ConfigService.DevGuilds)
+        _ = Task.Run(async () =>
         {
-            await interaction.RegisterCommandsToGuildAsync(guildId, true);
-        }
-        
-        Console.WriteLine("Commands are registered.");
+            Console.WriteLine($"Connected as: {client.CurrentUser.Username}#{client.CurrentUser.Discriminator}");
+            await client.SetGameAsync("you 🕵️", type: ActivityType.Watching);
+
+            await BotEmbedGenerator.GenerateBotEmbed(client);
+            _ = BotEmbedGenerator.StartAutoUpdate(client, 30);
+
+            foreach (var guildId in ConfigService.DevGuilds)
+            {
+                var guild = client.GetGuild(guildId);
+                if (guild == null) continue;
+
+                var existingCommands = await guild.GetApplicationCommandsAsync();
+                foreach (var cmd in existingCommands)
+                {
+                    await cmd.DeleteAsync();
+                }
+
+                await interaction.RegisterCommandsToGuildAsync(guildId, true);
+            }
+
+            Console.WriteLine("Commands are registered.");
+        });
+
+        return Task.CompletedTask;
     }
 }
