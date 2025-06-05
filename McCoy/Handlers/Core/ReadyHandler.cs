@@ -21,6 +21,12 @@ public static class ReadyHandler
             {
                 var guild = client.GetGuild(guildId);
                 if (guild == null) continue;
+                
+                var globalCommands = await client.GetGlobalApplicationCommandsAsync();
+                foreach (var cmd in globalCommands)
+                {
+                    await cmd.DeleteAsync();
+                }
 
                 var existingCommands = await guild.GetApplicationCommandsAsync();
                 foreach (var cmd in existingCommands)
