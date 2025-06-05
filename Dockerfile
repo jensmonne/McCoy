@@ -1,15 +1,13 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /app
+WORKDIR /src
 
-COPY McCoy/*.csproj ./
-RUN dotnet restore
+COPY McCoy/McCoy.csproj McCoy/
+RUN dotnet restore McCoy/McCoy.csproj
 
-COPY . ./
-RUN dotnet publish -c Release -o out
+COPY . .
+RUN dotnet publish McCoy/McCoy.csproj -c Release -o /app/out
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
-
 COPY --from=build /app/out ./
-
 ENTRYPOINT ["dotnet", "McCoy.dll"]
