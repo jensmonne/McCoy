@@ -12,7 +12,7 @@ public static class BotEmbedGenerator
 {
     private static readonly DateTime _startTime = DateTime.UtcNow;
     private static IUserMessage? _statusMessage;
-    private const string StatusMessageFile = "statusmsg.txt";
+    private const string StatusMessagePath = "config/statusmsg.txt";
 
     public static async Task GenerateBotEmbed(DiscordSocketClient client)
     {
@@ -104,15 +104,16 @@ public static class BotEmbedGenerator
 
     private static void SaveMessageId(ulong id)
     {
-        File.WriteAllText(StatusMessageFile, id.ToString());
+        Directory.CreateDirectory(Path.GetDirectoryName(StatusMessagePath)!);
+        File.WriteAllText(StatusMessagePath, id.ToString());
     }
 
     private static ulong? LoadMessageId()
     {
-        if (!File.Exists(StatusMessageFile))
+        if (!File.Exists(StatusMessagePath))
             return null;
 
-        var text = File.ReadAllText(StatusMessageFile);
+        var text = File.ReadAllText(StatusMessagePath);
         return ulong.TryParse(text, out var id) ? id : null;
     }
 }
