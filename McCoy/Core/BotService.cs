@@ -1,6 +1,5 @@
 ﻿using Discord.Interactions;
 using Discord.WebSocket;
-using McCoy.Handlers;
 using McCoy.Handlers.Core;
 using McCoy.Handlers.Messages;
 using McCoy.Handlers.Voice;

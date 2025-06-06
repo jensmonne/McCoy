@@ -23,6 +23,7 @@ public static class MessageUpdatedHandler
         var logChannel = textChannel.Guild.GetTextChannel(logChannelId);
         if (logChannel == null) return;
 
+        var now = EmbedUtils.GetAmsterdamTime();
         var joinTimestamp = author.JoinedAt?.ToUnixTimeSeconds();
         
         var embed = new EmbedBuilder()
@@ -36,7 +37,7 @@ public static class MessageUpdatedHandler
             
             .AddField("Channel", textChannel.Mention, true)
             .AddField("Message Sent At", EmbedUtils.FormatTimestamp(beforeMsg.Timestamp), true)
-            .AddField("Edited On", EmbedUtils.FormatTimestamp(DateTimeOffset.UtcNow), true)
+            .AddField("Edited On", now, true)
 
             .AddField("Before", string.IsNullOrWhiteSpace(beforeMsg.Content) ? "*[no text]*" : beforeMsg.Content.Truncate(1024))
             .AddField("After", string.IsNullOrWhiteSpace(after.Content) ? "*[no text]*" : after.Content.Truncate(1024))

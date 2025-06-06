@@ -2,7 +2,6 @@
 using Discord.Interactions;
 using Discord.WebSocket;
 using McCoy.Core;
-using McCoy.Modules;
 using McCoy.Modules.Config;
 
 namespace McCoy.Commands;

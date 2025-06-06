@@ -5,6 +5,14 @@ namespace McCoy.Utilities;
 
 public static class EmbedUtils
 {
+    public static string GetAmsterdamTime()
+    {
+        var amsterdamZone = TimeZoneInfo.FindSystemTimeZoneById("Europe/Amsterdam");
+        var nowUtc = DateTime.UtcNow;
+        var amsterdamTime = TimeZoneInfo.ConvertTimeFromUtc(nowUtc, amsterdamZone);
+        return amsterdamTime.ToString("M/d/yyyy HH:mm");
+    }
+    
     public static string FormatTimestamp(DateTimeOffset dt) =>
         dt.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
     
