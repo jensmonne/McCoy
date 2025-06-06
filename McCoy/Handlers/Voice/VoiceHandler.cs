@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Discord.WebSocket;
 using McCoy.Core;
+using McCoy.Features.Voices;
 using McCoy.Modules.Config;
 using McCoy.Utilities;
 
@@ -32,6 +33,8 @@ public static class VoiceHandler
         // JOIN
         if (before.VoiceChannel == null && after.VoiceChannel != null)
         {
+            ClaimableVC.VCClaimableJoin(after.VoiceChannel, user);
+            
             VoiceJoinTimes[user.Id] = now;
 
             embed.WithTitle("Member Joined Voice Channel")
@@ -49,6 +52,8 @@ public static class VoiceHandler
         // LEAVE
         else if (before.VoiceChannel != null && after.VoiceChannel == null)
         {
+            ClaimableVC.VCClaimableLeave(before.VoiceChannel);
+            
             var joinTime = VoiceJoinTimes.ContainsKey(user.Id) ? VoiceJoinTimes[user.Id] : (DateTime?)null;
             VoiceJoinTimes.Remove(user.Id);
 

@@ -12,4 +12,5 @@ public enum ChannelTypes
     // Other Channels
     Welcome,
     Status,
+    ClaimableVc,
 }
