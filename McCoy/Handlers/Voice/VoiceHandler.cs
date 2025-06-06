@@ -1,7 +1,6 @@
 ﻿using Discord;
 using Discord.WebSocket;
 using McCoy.Core;
-using McCoy.Modules;
 using McCoy.Modules.Config;
 using McCoy.Utilities;
 
@@ -26,6 +25,7 @@ public static class VoiceHandler
         if (logChannel == null) return;
         
         var now = DateTime.UtcNow;
+        var garyNow = EmbedUtils.GetAmsterdamTime();
 
         var embed = new EmbedBuilder().WithAuthor(user);
 
@@ -35,12 +35,13 @@ public static class VoiceHandler
             VoiceJoinTimes[user.Id] = now;
 
             embed.WithTitle("Member Joined Voice Channel")
-                 .WithColor(Color.Green)
-                 .AddField("User", $"<@{user.Id}>", true)
-                 .AddField("User ID", user.Id, true)
-                 .AddField("Channel", after.VoiceChannel.Mention, true)
-                 .AddField("Channel ID", after.VoiceChannel.Id, true)
-                 .AddField("Time", EmbedUtils.FormatTimestamp(now), true);
+                .WithColor(Color.Green)
+                .AddField("User", $"<@{user.Id}>", true)
+                .AddField("User ID", user.Id, true)
+                .AddField("Channel", after.VoiceChannel.Mention, true)
+                .AddField("Channel ID", after.VoiceChannel.Id, true)
+                .AddField("Time", $"<t:{new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds()}:f>", true)
+                .WithFooter($"Gary time: {garyNow}");
             
             var members = after.VoiceChannel.ConnectedUsers.Select(u => $"<@{u.Id}>");
             embed.AddField("Users in Channel", string.Join(", ", members));
@@ -61,8 +62,9 @@ public static class VoiceHandler
                  .AddField("User ID", user.Id, true)
                  .AddField("Channel", before.VoiceChannel.Mention, true)
                  .AddField("Channel ID", before.VoiceChannel.Id, true)
-                 .AddField("Time", EmbedUtils.FormatTimestamp(now), true)
-                 .AddField("Time Spent", timeSpent, true);
+                 .AddField("Time", $"<t:{new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds()}:f>", true)
+                 .AddField("Time Spent", timeSpent, true)
+                 .WithFooter($"Gary time: {garyNow}");
             
             var memberList = before.VoiceChannel.ConnectedUsers?.Select(u => $"<@{u.Id}>").ToList();
 
@@ -85,8 +87,9 @@ public static class VoiceHandler
                  .AddField("User ID", user.Id, true)
                  .AddField("From", before.VoiceChannel.Mention, true)
                  .AddField("To", after.VoiceChannel.Mention, true)
-                 .AddField("Time", EmbedUtils.FormatTimestamp(now), true)
-                 .AddField("Time Spent", timeSpent, true);
+                 .AddField("Time", $"<t:{new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds()}:f>", true)
+                 .AddField("Time Spent", timeSpent, true)
+                 .WithFooter($"Gary time: {garyNow}");
             
             var memberList = before.VoiceChannel.ConnectedUsers?.Select(u => $"<@{u.Id}>").ToList();
 

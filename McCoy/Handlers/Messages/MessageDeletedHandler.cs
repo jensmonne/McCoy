@@ -1,7 +1,6 @@
 ﻿using Discord;
 using Discord.WebSocket;
 using McCoy.Core;
-using McCoy.Modules;
 using McCoy.Modules.Config;
 using McCoy.Utilities;
 
@@ -25,7 +24,7 @@ public static class MessageDeletedHandler
         var logChannel = textChannel.Guild.GetTextChannel(logChannelId);
         if (logChannel == null) return;
         
-        var now = DateTimeOffset.UtcNow;
+        var now = EmbedUtils.GetAmsterdamTime();
         var joinTimestamp = author.JoinedAt?.ToUnixTimeSeconds();
         
         var embed = new EmbedBuilder()
@@ -39,7 +38,7 @@ public static class MessageDeletedHandler
 
             .AddField("Channel", textChannel.Mention, true)
             .AddField("Message Sent At", EmbedUtils.FormatTimestamp(msg.Timestamp), true)
-            .AddField("Message Deleted At", EmbedUtils.FormatTimestamp(now), true)
+            .AddField("Message Deleted At", now, true)
 
             .AddField("Content", string.IsNullOrWhiteSpace(msg.Content) ? "*[no text]*" : msg.Content.Truncate(1024))
             .Build();

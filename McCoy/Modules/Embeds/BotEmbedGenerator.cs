@@ -45,7 +45,7 @@ public static class BotEmbedGenerator
             .AddField("Uptime", EmbedUtils.FormatDuration(uptime), true)
             .AddField("Ping", $"{client.Latency} ms", true)
             .AddField("Version", ConfigService.BotVersion, true)
-            .WithFooter(footer => footer.Text = $"Last updated at {DateTime.UtcNow}")
+            .AddField("Last updated on", $"<t:{new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds()}:f>")
             .Build();
         
         if (_statusMessage == null)
