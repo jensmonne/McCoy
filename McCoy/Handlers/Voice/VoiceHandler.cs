@@ -24,18 +24,26 @@ public static class VoiceHandler
 
         var logChannel = guild.GetTextChannel(logChannelId);
         if (logChannel == null) return;
+        
+        var now = DateTime.UtcNow;
 
         var embed = new EmbedBuilder().WithAuthor(user);
 
         // JOIN
         if (before.VoiceChannel == null && after.VoiceChannel != null)
         {
-            VoiceJoinTimes[user.Id] = DateTime.UtcNow;
+            VoiceJoinTimes[user.Id] = now;
 
-            embed.WithTitle("Voice Channel Join")
+            embed.WithTitle("Member Joined Voice Channel")
                  .WithColor(Color.Green)
                  .AddField("User", $"<@{user.Id}>", true)
-                 .AddField("Channel", after.VoiceChannel.Name, true);
+                 .AddField("User ID", user.Id, true)
+                 .AddField("Channel", after.VoiceChannel.Mention, true)
+                 .AddField("Channel ID", after.VoiceChannel.Id, true)
+                 .AddField("Time", EmbedUtils.FormatTimestamp(now), true);
+            
+            var members = after.VoiceChannel.ConnectedUsers.Select(u => $"<@{u.Id}>");
+            embed.AddField("Users in Channel", string.Join(", ", members));
         }
         // LEAVE
         else if (before.VoiceChannel != null && after.VoiceChannel == null)
@@ -44,23 +52,51 @@ public static class VoiceHandler
             VoiceJoinTimes.Remove(user.Id);
 
             var timeSpent = joinTime.HasValue
-                ? EmbedUtils.FormatDuration(DateTime.UtcNow - joinTime.Value)
+                ? EmbedUtils.FormatDuration(now - joinTime.Value)
                 : "unknown";
 
-            embed.WithTitle("Voice Channel Leave")
+            embed.WithTitle("Member Left Voice Channel")
                  .WithColor(Color.Red)
                  .AddField("User", $"<@{user.Id}>", true)
-                 .AddField("Channel", before.VoiceChannel.Name, true)
+                 .AddField("User ID", user.Id, true)
+                 .AddField("Channel", before.VoiceChannel.Mention, true)
+                 .AddField("Channel ID", before.VoiceChannel.Id, true)
+                 .AddField("Time", EmbedUtils.FormatTimestamp(now), true)
                  .AddField("Time Spent", timeSpent, true);
+            
+            var memberList = before.VoiceChannel.ConnectedUsers?.Select(u => $"<@{u.Id}>").ToList();
+
+            var userListText = memberList != null && memberList.Any() ? string.Join(", ", memberList) : "No users remaining.";
+            embed.AddField("Users in Channel", userListText);
         }
         // SWITCH
         else if (before.VoiceChannel != after.VoiceChannel)
         {
-            embed.WithTitle("Voice Channel Switch")
+            var joinTime = VoiceJoinTimes.TryGetValue(user.Id, out var time) ? time : (DateTime?)null;
+            VoiceJoinTimes[user.Id] = now;
+            
+            var timeSpent = joinTime.HasValue
+                ? EmbedUtils.FormatDuration(now - joinTime.Value)
+                : "unknown";
+            
+            embed.WithTitle("Member Switched Voice Channel")
                  .WithColor(Color.Orange)
                  .AddField("User", $"<@{user.Id}>", true)
-                 .AddField("From", before.VoiceChannel.Name, true)
-                 .AddField("To", after.VoiceChannel.Name, true);
+                 .AddField("User ID", user.Id, true)
+                 .AddField("From", before.VoiceChannel.Mention, true)
+                 .AddField("To", after.VoiceChannel.Mention, true)
+                 .AddField("Time", EmbedUtils.FormatTimestamp(now), true)
+                 .AddField("Time Spent", timeSpent, true);
+            
+            var memberList = before.VoiceChannel.ConnectedUsers?.Select(u => $"<@{u.Id}>").ToList();
+
+            var userListText = memberList?.Any() == true ? string.Join(", ", memberList) : "No users remaining.";
+            embed.AddField($"Users in {before.VoiceChannel.Mention}", userListText);
+            
+            var aftermemberList = after.VoiceChannel.ConnectedUsers?.Select(u => $"<@{u.Id}>").ToList();
+
+            var afteruserListText = aftermemberList != null && aftermemberList.Any() ? string.Join(", ", aftermemberList) : "No users remaining.";
+            embed.AddField($"Users in {after.VoiceChannel.Mention}", afteruserListText);
         }
         // MUTE / UNMUTE
         else if (before.IsMuted != after.IsMuted)
