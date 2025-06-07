@@ -10,11 +10,11 @@ public static class EmbedUtils
         var amsterdamZone = TimeZoneInfo.FindSystemTimeZoneById("Europe/Amsterdam");
         var nowUtc = DateTime.UtcNow;
         var amsterdamTime = TimeZoneInfo.ConvertTimeFromUtc(nowUtc, amsterdamZone);
-        return amsterdamTime.ToString("M/d/yyyy HH:mm");
+        return amsterdamTime.ToString("yyyy/MM/dd HH:mm:ss");
     }
     
     public static string FormatTimestamp(DateTimeOffset dt) =>
-        dt.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+        dt.ToString("yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture);
     
     public static string FormatDuration(TimeSpan span)
     {

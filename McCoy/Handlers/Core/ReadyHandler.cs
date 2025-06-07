@@ -14,7 +14,6 @@ public static class ReadyHandler
             Console.WriteLine($"Connected as: {client.CurrentUser.Username}#{client.CurrentUser.Discriminator}");
             await client.SetGameAsync("you 🕵️", type: ActivityType.Watching);
 
-            await BotEmbedGenerator.GenerateBotEmbed(client);
             _ = BotEmbedGenerator.StartAutoUpdate(client, 30);
 
             /*foreach (var guildId in ConfigService.DevGuilds)

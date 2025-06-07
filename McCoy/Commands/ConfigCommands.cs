@@ -12,10 +12,10 @@ public class ConfigCommands : InteractionModuleBase<SocketInteractionContext>
     
     [SlashCommand("setchannel", "Set a log or utility channel for this server.")]
     [RequireUserPermission(GuildPermission.Administrator)]
-    public async Task SetChannel(ChannelTypes type, SocketTextChannel channel)
+    public async Task SetChannel(ChannelTypes type, SocketGuildChannel channel)
     {
         ChannelConfigService.SetChannel(Context.Guild.Id, type, channel.Id);
-        await RespondAsync($"{type} channel set to {channel.Mention}.");
+        await RespondAsync($"{type} channel set to <#{channel.Id}>.");
     }
 
     [SlashCommand("clearchannel", "Clear a configured channel.")]

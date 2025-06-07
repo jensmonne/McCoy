@@ -11,5 +11,7 @@ public enum ChannelTypes
     AdminLogs,
     // Other Channels
     Welcome,
+    Goodbye,
     Status,
+    ClaimableVc,
 }
