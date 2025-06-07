@@ -1,6 +1,7 @@
 ﻿using Discord.Interactions;
 using Discord.WebSocket;
 using McCoy.Handlers.Core;
+using McCoy.Handlers.Events;
 using McCoy.Handlers.Messages;
 using McCoy.Handlers.Voice;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,5 +37,7 @@ public class BotService
         Client.MessageDeleted += MessageDeletedHandler.OnMessageDeleted;
         Client.MessageUpdated += MessageUpdatedHandler.OnMessageUpdated;
         Client.UserVoiceStateUpdated += VoiceHandler.OnUserVoiceStateUpdated;
+        Client.UserJoined += JoinLeaveHandler.OnUserJoin;
+        Client.UserLeft += JoinLeaveHandler.OnUserLeave;
     }
 }
