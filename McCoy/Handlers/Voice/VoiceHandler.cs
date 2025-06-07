@@ -52,7 +52,7 @@ public static class VoiceHandler
         // LEAVE
         else if (before.VoiceChannel != null && after.VoiceChannel == null)
         {
-            ClaimableVC.VCClaimableLeave(before.VoiceChannel);
+            ClaimableVC.VCClaimableLeave(before.VoiceChannel, user);
             
             var joinTime = VoiceJoinTimes.ContainsKey(user.Id) ? VoiceJoinTimes[user.Id] : (DateTime?)null;
             VoiceJoinTimes.Remove(user.Id);
@@ -79,6 +79,17 @@ public static class VoiceHandler
         // SWITCH
         else if (before.VoiceChannel != after.VoiceChannel)
         {
+            var vc1 = ChannelConfigService.GetChannel(before.VoiceChannel.Guild.Id, ChannelTypes.ClaimableVc);
+            if (vc1 != null && before.VoiceChannel.Id == vc1)
+            {
+                await ClaimableVC.VCClaimableSwitch(before.VoiceChannel, user, false);
+            }
+            var vc2 = ChannelConfigService.GetChannel(after.VoiceChannel.Guild.Id, ChannelTypes.ClaimableVc);
+            if (vc2 != null && after.VoiceChannel.Id == vc2)
+            {
+                await ClaimableVC.VCClaimableSwitch(after.VoiceChannel, user, true);
+            }
+            
             var joinTime = VoiceJoinTimes.TryGetValue(user.Id, out var time) ? time : (DateTime?)null;
             VoiceJoinTimes[user.Id] = now;
             
