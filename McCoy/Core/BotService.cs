@@ -4,6 +4,7 @@ using McCoy.Handlers.Core;
 using McCoy.Handlers.Events;
 using McCoy.Handlers.Messages;
 using McCoy.Handlers.Voice;
+using McCoy.Modules.Embeds;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace McCoy.Core;
@@ -32,6 +33,11 @@ public class BotService
         Client.Log += LogHandler.HandleLog;
         Interaction.Log += LogHandler.HandleLog;
         Client.Ready += () => ReadyHandler.OnReady(Client, Interaction);
+        Client.Connected += () =>
+        {
+            BotEmbedGenerator.ResetStatusMessage();
+            return Task.CompletedTask;
+        };
         Client.InteractionCreated += InteractionHandler.HandleInteraction;
         Client.MessageReceived += MessageHandler.HandleMessage;
         Client.MessageDeleted += MessageDeletedHandler.OnMessageDeleted;
