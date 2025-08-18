@@ -48,7 +48,7 @@ public static class BotEmbedGenerator
             .AddField("Last updated on", $"<t:{new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds()}:f>")
             .Build();
         
-        if (_statusMessage == null)
+        if (_statusMessage == null || _statusMessage.Channel == null)
         {
             ulong? messageId = LoadMessageId();
             if (messageId.HasValue)
@@ -78,7 +78,21 @@ public static class BotEmbedGenerator
             }
             catch
             {
-                Console.WriteLine("Status message invalid. Creating a new one.");
+                Console.WriteLine("Status message modify failed. Trying to refetch...");
+                _statusMessage = null;
+                ulong? messageId = LoadMessageId();
+                if (messageId.HasValue)
+                {
+                    var message = await channel.GetMessageAsync(messageId.Value);
+                    if (message is IUserMessage userMsg)
+                    {
+                        _statusMessage = userMsg;
+                        await _statusMessage.ModifyAsync(msg => msg.Embed = embed);
+                        return;
+                    }
+                }
+
+                Console.WriteLine("Old status message not found. Creating a new one.");
                 _statusMessage = await channel.SendMessageAsync(embed: embed);
                 SaveMessageId(_statusMessage.Id);
             }
@@ -115,5 +129,10 @@ public static class BotEmbedGenerator
 
         var text = File.ReadAllText(StatusMessagePath);
         return ulong.TryParse(text, out var id) ? id : null;
+    }
+    
+    public static void ResetStatusMessage()
+    {
+        _statusMessage = null;
     }
 }
