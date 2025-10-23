@@ -17,6 +17,11 @@ public class BotHostedService : IHostedService
     {
         var token = DotNetEnv.Env.GetString("DISCORD_TOKEN");
 
+        if (string.IsNullOrEmpty(token))
+        {
+            await Console.Error.WriteLineAsync("No discord token provided.");
+        }
+
         _botService.ConfigureEventHandlers();
         await _botService.Client.LoginAsync(TokenType.Bot, token);
         await _botService.Client.StartAsync();
@@ -27,6 +32,6 @@ public class BotHostedService : IHostedService
     {
         await _botService.Client.StopAsync();
         await _botService.Client.LogoutAsync();
-        _botService.Client.Dispose();
+        await _botService.Client.DisposeAsync();
     }
 }
