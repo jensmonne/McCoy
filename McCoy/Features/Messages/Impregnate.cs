@@ -9,7 +9,6 @@ public class Impregnate
 
     public static void Impregnation(SocketMessage message, bool isGay)
     {
-        // Gary it already checks if the word "gay" is said or if it is chloe who says the message (:
         var malePregnancy = new Emoji("🫃");
         
         if (isGay)
@@ -18,7 +17,7 @@ public class Impregnate
             return;
         }
         
-        if (random.Next(1, 12) == 3)
+        if (random.Next(1, 12) == 1)
         {
             message.AddReactionAsync(malePregnancy);
         }
