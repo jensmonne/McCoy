@@ -14,7 +14,7 @@ public static class BotEmbedGenerator
     private static IUserMessage? _statusMessage;
     private const string StatusMessagePath = "config/statusmsg.txt";
 
-    public static async Task GenerateBotEmbed(DiscordSocketClient client)
+    private static async Task GenerateBotEmbed(DiscordSocketClient client)
     {
         var guild = client.Guilds.FirstOrDefault();
         if (guild == null)
