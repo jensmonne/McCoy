@@ -1,10 +1,10 @@
 # McCoy
 
-Just a discord bot for my private server
+A discord bot made with Discord.Net that i use for a private server. Has some funky functions and was not made with being used in other servers in mind.
 
 ## TODO:
 
 - haunt command to remind people of previous messages
-- mention category
+- mention categories
 - leveling system
-- vc time
+- vc time tracking
